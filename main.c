@@ -1,11 +1,18 @@
 #include <stdio.h>
 
+typedef struct Auto
+{
+    char kategoria[50], znacka[50], predajca[100], stav_vozidla[200];
+    int id, cena, rok_vyroby;
+    struct Auto *child;
+} AUTO;
+
 int main()
 {
     int exit = 1;
     char prikaz;
 
-    do
+    do // Zaciatok loopu
     {
         scanf("%1c", &prikaz);
 
@@ -21,7 +28,7 @@ int main()
             case 'k':  exit = 0; break; // TODO uvolnenie pamate
         }
     }
-    while(exit);
+    while(exit); // Koniec loopu -- Opakuje sa okial nie je zadane "k"
 
     return 0;
 }
