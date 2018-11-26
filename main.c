@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 #include <string.h>
 
 typedef struct Auto
@@ -144,7 +145,6 @@ void hladajAuto(AUTO *list)
     vypisAut(v);
 }
 
-
 void pridajAuto(AUTO **list)
 {
     AUTO *nove = (AUTO *) malloc(sizeof(AUTO));
@@ -156,8 +156,6 @@ void pridajAuto(AUTO **list)
     scanf("%d\n", &(nove->cena));
     scanf("%d\n", &(nove->rok_vyroby));
     scanf("%[^\n]\n", nove->stav_vozidla);
-
-    int offset = 0;
 
     if(*list == NULL || poradie <= 1) // TODO Spojit so spodkom
     {
@@ -178,6 +176,28 @@ void pridajAuto(AUTO **list)
     a->child = nove;
 }
 
+void aktualizujAuto(AUTO *list)
+{
+    char znacka[50];
+    scanf(" %[^\n]\n", znacka);
+    int rok, c = 0;
+    scanf(" %d\n", &rok);
+
+    AUTO *a = list;
+    while(a != NULL)
+    {
+        if(strcmp(a->znacka, znacka) == 0 && rok == a->rok_vyroby)
+        {
+            a->cena = max(a->cena-100, 0);
+            c++;
+        }
+
+        a = a->child;
+    }
+
+    printf("Aktualizovalo sa %d zaznamov\n", c);
+}
+
 int main()
 {
     int exit = 1;
@@ -194,9 +214,9 @@ int main()
             case 'n': nacitajSubor(&list);break; // nacitanie suboru
             case 'v': vypisAut(list); break; // vypis suboru
             case 'h': hladajAuto(list); break; // vyhladavanie
-            case 'p': pridajAuto(&list); break; // TODO pridavanie
+            case 'p': pridajAuto(&list); break; // pridavanie
             case 'z': break; // TODO mazanie
-            case 'a': break; // TODO aktualizacia zaznamu
+            case 'a': aktualizujAuto(list); break;// aktualizacia zaznamu
             case 'k':  exit = 0; break; // TODO uvolnenie pamate
         }
     }
