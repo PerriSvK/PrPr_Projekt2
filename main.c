@@ -5,7 +5,7 @@
 typedef struct Auto
 {
     char kategoria[50], znacka[50], predajca[100], stav_vozidla[200];
-    int id, cena, rok_vyroby;
+    int cena, rok_vyroby;
     struct Auto *child;
 } AUTO;
 
@@ -32,13 +32,12 @@ void nacitajSubor(AUTO **list)
 
     for(int i = 0; i < size; i++) // Pre pocet vodicov
     {
-        AUTO *a = malloc(sizeof(AUTO));
+        AUTO *a = (AUTO *) malloc(sizeof(AUTO));
 
         // Nacitanie dat zo suboru do premennych
         fscanf(subor, "$\n%[^\n]\n%[^\n]\n%[^\n]\n%d\n%d\n%[^\n]\n",
                a->kategoria, a->znacka, a->predajca, &(a->cena), &(a->rok_vyroby), a->stav_vozidla);
 
-        a->id = i+1; // priradime mu id (cislujeme od nuly)
         a->child = NULL;
 
         // Priradime do zoznamu
@@ -62,7 +61,7 @@ void nacitajSubor(AUTO **list)
     printf("Nacitalo sa %d zaznamov\n", size);
 }
 
-void vypisAut(AUTO *list, int keepId)
+void vypisAut(AUTO *list)
 {
     if(list == NULL) // Nechceme null pointer
     {
@@ -70,14 +69,14 @@ void vypisAut(AUTO *list, int keepId)
         return;
     }
 
-    int id = 1; // Vlastne cislovanie zoznamu -> funkcia je pouzita aj inde ako vo "v"
+    int id = 1; // Cislovanie zoznamu
 
     AUTO *a = list;
 
     while(a != NULL) // Ak existuje aktualny prvok
     {
         printf("%d.\nkategoria: %s\nznacka: %s\npredajca: %s\ncena: %d\nrok_vyroby: %d\nstav_vozidla: %s\n",
-               keepId ? a->id : id++, a->kategoria, a->znacka, a->predajca, a->cena, a->rok_vyroby, a->stav_vozidla);
+                id++, a->kategoria, a->znacka, a->predajca, a->cena, a->rok_vyroby, a->stav_vozidla);
 
         // Tak ho vypiseme a ideme dalej
         a = a->child;
@@ -142,7 +141,7 @@ void hladajAuto(AUTO *list)
         return;
     }
 
-    vypisAut(v, 0);
+    vypisAut(v);
 }
 
 int main()
@@ -159,8 +158,8 @@ int main()
             // nie je cas hladat lepsi sposob
         {
             case 'n': nacitajSubor(&list);break; // nacitanie suboru
-            case 'v': vypisAut(list, 1); break; // vypis suboru
-            case 'h': hladajAuto(list); break; // TODO vyhladavanie
+            case 'v': vypisAut(list); break; // vypis suboru
+            case 'h': hladajAuto(list); break; // vyhladavanie
             case 'p': break; // TODO pridavanie
             case 'z': break; // TODO mazanie
             case 'a': break; // TODO aktualizacia zaznamu
