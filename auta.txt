@@ -1,0 +1,42 @@
+$
+osobny automobil
+Ferrari
+Autobazar Pestovatelska 4 Bratislava
+5620
+2005
+udrziavane cervene dvojdverove
+$
+kamion
+Renault
+AUTO Modranska 5 Senec
+18000
+2011
+po havarii opraveny v dobrom stave
+$
+osobny automobil
+Skoda
+SELLER Fialova 8 Bratislava
+1420
+2012
+ojazdene
+$
+osobny automobil
+BMW
+NIC Zelena 14 Tac
+9876
+2015
+skoro ako nove
+$
+osobny automobil
+Skoda
+SKLAD Bane 4 Brana
+4751
+2014
+kvalitne a dobre
+$
+autobus
+Mercedes
+BUS Hlavna 1 Balog
+11275
+2017
+jazdene
