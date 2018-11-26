@@ -144,6 +144,40 @@ void hladajAuto(AUTO *list)
     vypisAut(v);
 }
 
+
+void pridajAuto(AUTO **list)
+{
+    AUTO *nove = (AUTO *) malloc(sizeof(AUTO));
+    int poradie;
+    scanf(" %d\n", &poradie);
+    scanf("%[^\n]\n", nove->kategoria);
+    scanf("%[^\n]\n", nove->znacka);
+    scanf("%[^\n]\n", nove->predajca);
+    scanf("%d\n", &(nove->cena));
+    scanf("%d\n", &(nove->rok_vyroby));
+    scanf("%[^\n]\n", nove->stav_vozidla);
+
+    int offset = 0;
+
+    if(*list == NULL || poradie <= 1) // TODO Spojit so spodkom
+    {
+        nove->child = *list;
+        *list = nove;
+        return;
+    }
+
+    AUTO *a = *list;
+    int depth = 2;
+    while( a->child != NULL && depth < poradie)
+    {
+        a = a->child;
+        depth++;
+    }
+
+    nove->child = a->child;
+    a->child = nove;
+}
+
 int main()
 {
     int exit = 1;
@@ -160,7 +194,7 @@ int main()
             case 'n': nacitajSubor(&list);break; // nacitanie suboru
             case 'v': vypisAut(list); break; // vypis suboru
             case 'h': hladajAuto(list); break; // vyhladavanie
-            case 'p': break; // TODO pridavanie
+            case 'p': pridajAuto(&list); break; // TODO pridavanie
             case 'z': break; // TODO mazanie
             case 'a': break; // TODO aktualizacia zaznamu
             case 'k':  exit = 0; break; // TODO uvolnenie pamate
