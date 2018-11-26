@@ -10,8 +10,21 @@ typedef struct Auto
     struct Auto *child;
 } AUTO;
 
+void uvolniPamat(AUTO **a)
+{
+    if((*a)->child != NULL)
+    {
+        uvolniPamat(&(*a)->child);
+    }
+
+    free(*a);
+    *a = NULL;
+}
+
 void nacitajSubor(AUTO **list)
 {
+    uvolniPamat(list);
+
     FILE *subor = fopen("auta.txt", "r"); // Nacitame si subor
 
     if(subor == NULL)
@@ -117,7 +130,7 @@ void hladajAuto(AUTO *list)
             {
                 AUTO cp = *a; // Vytvorime kopiu auta
                 v = &cp; // Nastavime pointer vysledku
-                v->child = NULL; // Vynulujeme nepravdivy dalsi prvok
+                v->child = NULL;
             }
             else
             {
@@ -127,9 +140,9 @@ void hladajAuto(AUTO *list)
                     t = t->child; // posunieme sa dalej
                 }
 
-                AUTO cp = *a; // Vytvorime si kopiu
+                AUTO cp = *a; // Vytvorime kopiu auta
                 t->child = &cp; // Pridame ju na koniec vysledku
-                t->child->child = NULL; // Vynulujeme dalsi prvok
+                t->child->child = NULL;
             }
         }
 
@@ -149,7 +162,7 @@ void pridajAuto(AUTO **list)
 {
     AUTO *nove = (AUTO *) malloc(sizeof(AUTO));
     int poradie;
-    scanf(" %d\n", &poradie);
+    scanf(" %d\n", &poradie); // Nacitanie udajov
     scanf("%[^\n]\n", nove->kategoria);
     scanf("%[^\n]\n", nove->znacka);
     scanf("%[^\n]\n", nove->predajca);
@@ -157,23 +170,68 @@ void pridajAuto(AUTO **list)
     scanf("%d\n", &(nove->rok_vyroby));
     scanf("%[^\n]\n", nove->stav_vozidla);
 
-    if(*list == NULL || poradie <= 1) // TODO Spojit so spodkom
+    if(*list == NULL || poradie <= 1) // Ak mam prazdny zoznam alebo auto ide na zaciatok
     {
-        nove->child = *list;
-        *list = nove;
+        nove->child = *list; // Tak mu nastavim "chvost"
+        *list = nove; // A dam ho na zaciatok
         return;
     }
 
     AUTO *a = *list;
     int depth = 2;
-    while( a->child != NULL && depth < poradie)
+    while( a->child != NULL && depth < poradie) // Kontrolujem, ci nie som na konci alebo ci nie som dost hlboko
     {
-        a = a->child;
+        a = a->child; // Ak nie, pokracujem
         depth++;
     }
 
-    nove->child = a->child;
-    a->child = nove;
+    nove->child = a->child; // Nastavim "chvost"
+    a->child = nove; // A priradim na danu poziciu
+}
+
+void vymazAuto(AUTO **list)
+{
+    char znacka[50];
+    scanf(" %[^\n]", znacka); // Nacitanie
+
+    // Na velke pismena
+    for(int i = 0; znacka[i]; i++)
+    {
+        znacka[i] = (char) (znacka[i] >= 'a' ?  znacka[i] -'a'+'A' : znacka[i]);
+    }
+
+    int pocet = 0;
+
+    AUTO *last = NULL; // Posledny "zijuci" zaznam
+    AUTO *a = *list;
+    while(a != NULL)
+    {
+        char velke[50];
+        strcpy(velke, a->znacka);
+
+        // Znacka na velke pismena
+        for(int i = 0; velke[i]; i++)
+        {
+            velke[i] = (char) (velke[i] >= 'a' ?  velke[i] -'a'+'A' : velke[i]);
+        }
+
+        if(strstr(velke, znacka) == NULL) // Ak znacka neobsahuje zadanu cast
+        {
+            if(last != NULL) // Ak uz mame zaznam, tak aktualne auto napiseme na koniec
+            {
+                last->child = a; // Tak ho nastavime
+            }
+
+            last = a; // Novy poslendy "zijuci" prvok
+        }
+        else
+        {
+            pocet++; // Inak mazeme
+        }
+        a = a->child;
+    }
+
+    printf("Vymazalo sa %d zaznamov\n", pocet);
 }
 
 void aktualizujAuto(AUTO *list)
@@ -186,9 +244,9 @@ void aktualizujAuto(AUTO *list)
     AUTO *a = list;
     while(a != NULL)
     {
-        if(strcmp(a->znacka, znacka) == 0 && rok == a->rok_vyroby)
+        if(strcmp(a->znacka, znacka) == 0 && rok == a->rok_vyroby) // Ak sedi aj znacka aj rok
         {
-            a->cena = max(a->cena-100, 0);
+            a->cena = max(a->cena-100, 0); // Tak znizime cenu o 100, minimalna mozna hodnota je 0
             c++;
         }
 
@@ -215,9 +273,9 @@ int main()
             case 'v': vypisAut(list); break; // vypis suboru
             case 'h': hladajAuto(list); break; // vyhladavanie
             case 'p': pridajAuto(&list); break; // pridavanie
-            case 'z': break; // TODO mazanie
-            case 'a': aktualizujAuto(list); break;// aktualizacia zaznamu
-            case 'k':  exit = 0; break; // TODO uvolnenie pamate
+            case 'z': vymazAuto(&list); break; // mazanie
+            case 'a': aktualizujAuto(list); break; // aktualizacia zaznamu
+            case 'k': uvolniPamat(&list); exit = 0; break; // uvolnenie pamate a ukoncenie
         }
     }
     while(exit); // Koniec loopu -- Opakuje sa okial nie je zadane "k"
