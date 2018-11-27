@@ -241,10 +241,25 @@ void aktualizujAuto(AUTO *list)
     int rok, c = 0;
     scanf(" %d\n", &rok);
 
+    // Vsetko na velke pismena
+    for(int i = 0; znacka[i]; i++)
+    {
+        znacka[i] = (char) (znacka[i] >= 'a' ? znacka[i] - 'a' + 'A' : znacka[i]);
+    }
+
     AUTO *a = list;
     while(a != NULL)
     {
-        if(strcmp(a->znacka, znacka) == 0 && rok == a->rok_vyroby) // Ak sedi aj znacka aj rok
+        char velke[50];
+        int vel;
+        // Vsetko na velke pismena
+        for(vel = 0; a->znacka[vel]; vel++)
+        {
+            velke[vel] = (char) (velke[vel] >= 'a' ? velke[vel] - 'a' + 'A' : velke[vel]);
+        }
+        velke[vel] = '\0';
+
+        if(strcmp(velke, znacka) == 0 && rok == a->rok_vyroby) // Ak znacka aj rok sedi
         {
             a->cena = max(a->cena-100, 0); // Tak znizime cenu o 100, minimalna mozna hodnota je 0
             c++;
