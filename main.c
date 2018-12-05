@@ -79,7 +79,6 @@ void vypisAut(AUTO *list)
 {
     if(list == NULL) // Nechceme null pointer
     {
-        printf("NULL\n");
         return;
     }
 
@@ -99,6 +98,10 @@ void vypisAut(AUTO *list)
 
 void hladajAuto(AUTO *list)
 {
+
+    if(list == NULL)
+        return;
+
     char znacka[50], male[50];
     int cena;
 
@@ -151,7 +154,7 @@ void hladajAuto(AUTO *list)
 
     if(v == NULL)
     {
-        printf("V ponuke nie su pozadovane auta.\n");
+        printf("V ponuke nie su pozadovane auta\n");
         return;
     }
 
@@ -236,6 +239,9 @@ void vymazAuto(AUTO **list)
 
 void aktualizujAuto(AUTO *list)
 {
+    if(list == NULL)
+        return;
+
     char znacka[50];
     scanf(" %[^\n]\n", znacka);
     int rok, c = 0;
