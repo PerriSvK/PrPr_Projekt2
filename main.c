@@ -12,6 +12,9 @@ typedef struct Auto
 
 void uvolniPamat(AUTO **a)
 {
+    if(a == NULL || *a == NULL) // Oprava padu ked list neexistuje
+        return;
+
     if((*a)->child != NULL)
     {
         uvolniPamat(&(*a)->child);
@@ -126,7 +129,7 @@ void hladajAuto(AUTO *list)
         }
         male[vel] = '\0'; // Ukoncime string
 
-        if(strcmp(male, znacka) == 0 && a->cena <= cena) // Ak sedi znacka aj cena
+        if((strcmp(male, znacka) == 0) && (a->cena <= cena)) // Ak sedi znacka aj cena
         {
             // Mame zhodu pridavame
             if(v == NULL) // Ak vo vysledku nic nie je
@@ -173,7 +176,7 @@ void pridajAuto(AUTO **list)
     scanf("%d\n", &(nove->rok_vyroby));
     scanf("%[^\n]\n", nove->stav_vozidla);
 
-    if(*list == NULL || poradie <= 1) // Ak mam prazdny zoznam alebo auto ide na zaciatok
+    if((*list == NULL) || (poradie <= 1)) // Ak mam prazdny zoznam alebo auto ide na zaciatok
     {
         nove->child = *list; // Tak mu nastavim "chvost"
         *list = nove; // A dam ho na zaciatok
@@ -182,7 +185,7 @@ void pridajAuto(AUTO **list)
 
     AUTO *a = *list;
     int depth = 2;
-    while( a->child != NULL && depth < poradie) // Kontrolujem, ci nie som na konci alebo ci nie som dost hlboko
+    while((a->child != NULL) && (depth < poradie)) // Kontrolujem, ci nie som na konci alebo ci nie som dost hlboko
     {
         a = a->child; // Ak nie, pokracujem
         depth++;
@@ -265,7 +268,7 @@ void aktualizujAuto(AUTO *list)
         }
         velke[vel] = '\0';
 
-        if(strcmp(velke, znacka) == 0 && rok == a->rok_vyroby) // Ak znacka aj rok sedi
+        if((strcmp(velke, znacka) == 0) && (rok == a->rok_vyroby)) // Ak znacka aj rok sedi
         {
             a->cena = max(a->cena-100, 0); // Tak znizime cenu o 100, minimalna mozna hodnota je 0
             c++;
