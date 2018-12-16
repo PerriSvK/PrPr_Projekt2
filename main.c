@@ -270,7 +270,7 @@ void aktualizujAuto(AUTO *list)
 
         if((strcmp(velke, znacka) == 0) && (rok == a->rok_vyroby)) // Ak znacka aj rok sedi
         {
-            a->cena = max(a->cena-100, 0); // Tak znizime cenu o 100, minimalna mozna hodnota je 0
+            a->cena = (int) fmaxf(a->cena-100, 0); // Tak znizime cenu o 100, minimalna mozna hodnota je 0
             c++;
         }
 
